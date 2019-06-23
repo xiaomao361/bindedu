@@ -20,6 +20,6 @@ from django.conf.urls import include, url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^launch_request/', views.launch_request),
-    url(r'^$', views.launch_request),
+    url(r'^get_index_list/', views.get_index_list),
+    url(r'^app_playlist/', views.app_playlist),
 ]

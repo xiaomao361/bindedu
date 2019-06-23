@@ -3,49 +3,83 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from timechick import models
-from django.forms.models import model_to_dict
-from timechick import tresponse
+import random
+
+
+def make_response(id, url, singer, name, album_img, artist_img, corpus_a, corpus_b):
+    dic = {}
+    dic['id'] = id
+    dic['url'] = url
+    dic['singer'] = singer
+    dic['name'] = name
+    dic['album_img'] = album_img
+    dic['artist_img'] = artist_img
+    dic['corpus_a'] = corpus_a
+    dic['corpus_b'] = corpus_b
+    return dic
+
 
 @csrf_exempt
-def launch_request(request):
+def get_index_list(request):
     if request.method == "POST":
-        received_json_data = json.loads(request.body)
+        phone = request.POST['phone'].replace(' ', '')
+        try:
+            user = models.User.objects.get(mobile=phone)
+            listened_list = models.PlayList.objects.filter(user_id=user.id)
+            listened_array = []
+            for listened in listened_list:
+                listened_array.append(listened.id)
+            songs = models.Song.objects.all()
+            list = []
+            music = []
+            while(len(list) < 4):
+                id = random.randint(1, len(songs))
+                song = models.Song.objects.get(id=id)
+                if song.is_shelf == 1 and id not in list and id not in listened_array:
+                    list.append(id)
+                    dic = make_response(id, song.url, song.artist, song.name,
+                                        song.album_img, song.artist_img, song.corpus_a, song.corpus_b)
+                    music.append(dic)
+            return HttpResponse(json.dumps(music), content_type="application/json")
+        except:
+            models.User.objects.create(mobile=phone)
+            songs = models.Song.objects.all()
+            list = []
+            music = []
+            while(len(list) < 4):
+                id = random.randint(1, len(songs))
+                song = models.Song.objects.get(id=id)
+                if song.is_shelf == 1 and id not in list:
+                    list.append(id)
+                    dic = make_response(id, song.url, song.artist, song.name,
+                                        song.album_img, song.artist_img, song.corpus_a, song.corpus_b)
+                    music.append(dic)
+            return HttpResponse(json.dumps(music), content_type="application/json")
+    else:
+        resp = {
+            'code': '403',
+            'message': 'wrong method, need POST',
+        },
+        return HttpResponse(json.dumps(resp), status='403', content_type="application/json")
 
-        # context
-        context = {}
-        intent = tresponse.Intent('')
-        expectResponse = tresponse.ExpectResponse('', '', '')
-        context['intent'] = intent.__dict__
-        context['expectResponse'] = []
-        context['expectResponse'].append(expectResponse.__dict__)
 
-        # session 
-        received_session = received_json_data['session']
-        session = {}
-        attributes = tresponse.Attributes(received_session['new'], received_session['sessionId'])
-        session['attributes'] = attributes.__dict__
-        
-        # response
-        response = {}
-        outputSpeech = tresponse.OutputSpeech('PlainText', '欢迎', '')
-        response['outputSpeech'] = outputSpeech.__dict__
-        response['reprompt'] = {}
-        response['card'] = {}
-        response['directives'] = []
-        response['expectSpeech'] = False
-        response['shouldEndSession'] = False
-
-        # data
-        data = {}
-        data['version'] = "2.0"
-        data['context'] = context
-        data['session'] = session
-        data['response'] = response
-        print(data)
-        return HttpResponse(json.dumps(data), content_type="application/json")
-
-
-def ended_request(self):
+@csrf_exempt
+def app_playlist(request):
     if request.method == "POST":
-        received_json_data = json.loads(request.body)
-        return HttpResponse(json.dumps(received_json_data), content_type="application/json")
+        phone = request.POST['phone'].replace(' ', '')
+        id = request.POST['id'].replace(' ', '')
+        emotion = request.POST['emotion'].replace(' ', '')
+        user_id = models.User.objects.get(mobile=phone).id
+        models.PlayList.objects.create(
+            song_id=id, user_id=user_id, emotion=emotion)
+        resp = {
+            'code': '200',
+            'message': 'success',
+        },
+        return HttpResponse(json.dumps(resp), status='200', content_type="application/json")
+    else:
+        resp = {
+            'code': '403',
+            'message': 'wrong method, need POST',
+        },
+        return HttpResponse(json.dumps(resp), status='403', content_type="application/json")
