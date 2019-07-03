@@ -21,5 +21,5 @@ from django.conf.urls import include, url
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^get_index_list/', views.get_index_list),
-    url(r'^app_playlist/', views.app_playlist),
+    url(r'^add_playlist/', views.add_playlist),
 ]

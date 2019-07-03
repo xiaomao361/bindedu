@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 
 class User(models.Model):
     gender = (
@@ -15,7 +13,7 @@ class User(models.Model):
         max_length=128, default="", blank=True, verbose_name='名')
     email = models.EmailField(default="", verbose_name='邮件', blank=True)
     mobile = models.CharField(
-        max_length=128, default="", verbose_name='电话',unique=True, blank=True)
+        max_length=128, default="", verbose_name='电话', unique=True, blank=True)
     sex = models.CharField(max_length=32, choices=gender,
                            default="男", verbose_name='性别', blank=True)
     is_delete = models.BooleanField(
@@ -26,7 +24,7 @@ class User(models.Model):
     update_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.baidu_id
+        return self.mobile
 
     class Meta:
         ordering = ["create_time"]
@@ -51,7 +49,8 @@ class Song(models.Model):
         max_length=128, default="", blank=True, verbose_name='专辑封面')
     artist_img = models.CharField(
         max_length=128, default="", blank=True, verbose_name='艺术家图片')
-    type = models.CharField(max_length=32, blank=True, choices=gender, verbose_name='歌曲类型')
+    type = models.CharField(max_length=32, blank=True,
+                            choices=gender, verbose_name='歌曲类型')
     is_shelf = models.BooleanField(
         default=True, verbose_name='是否上架')
     corpus_a = models.TextField(
@@ -71,17 +70,25 @@ class Song(models.Model):
 
 
 class PlayList(models.Model):
+    gender = (
+        ('public', "通用音乐"),
+        ('mainland', "大陆红歌"),
+        ('taiwan', "台语歌"),
+        ('japanese', "日语歌"),
+    )
     user = models.ForeignKey(
         'User', on_delete=models.CASCADE, default="", verbose_name='用户')
     song = models.ForeignKey(
         'Song', on_delete=models.CASCADE, default="", verbose_name='歌曲')
     emotion = models.CharField(
         max_length=128, default="", verbose_name='情绪')
+    type = models.CharField(max_length=32, blank=True,
+                            choices=gender, verbose_name='歌曲类型')
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     class Meta:
         ordering = ["create_time"]
