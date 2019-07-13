@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^get_index_list/', views.get_index_list),
     url(r'^add_playlist/', views.add_playlist),
+    url(r'^get_list_with_phone/', views.get_list_with_phone),
 ]
