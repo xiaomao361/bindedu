@@ -44,7 +44,7 @@ class Song(models.Model):
         max_length=128, default="", verbose_name='歌曲名称')
     artist = models.CharField(
         max_length=128, default="未知艺术家", verbose_name='艺术家')
-    url = models.CharField(max_length=128, default="", verbose_name='歌曲地址')
+    url = models.CharField(max_length=512, default="", verbose_name='歌曲地址')
     album_img = models.CharField(
         max_length=128, default="", blank=True, verbose_name='专辑封面')
     artist_img = models.CharField(

@@ -155,6 +155,7 @@ def get_list_with_phone(request):
         music = []
         phone = request.POST['phone'].replace(' ', '')
         if len(phone) == 11:
+            print("dalu")
             try:
                 user = models.User.objects.get(mobile=phone)
                 listened_list = models.PlayList.objects.filter(
@@ -168,7 +169,7 @@ def get_list_with_phone(request):
                 while(len(list) < 4):
                     id = random.randint(1, len(song_list))
                     song = models.Song.objects.get(id=song_list[id])
-                    if song.is_shelf == 1 and id not in list:
+                    if song.is_shelf == 1 and song_list[id] not in list:
                         list.append(song_list[id])
                         dic = make_response(song_list[id], song.url, song.artist, song.name,
                                             song.album_img, song.artist_img, song.corpus_a, song.corpus_b)
@@ -182,7 +183,7 @@ def get_list_with_phone(request):
                 while(len(list) < 4):
                     id = random.randint(1, len(song_list))
                     song = models.Song.objects.get(id=song_list[id])
-                    if song.is_shelf == 1 and id not in list:
+                    if song.is_shelf == 1 and song_list[id] not in list:
                         list.append(song_list[id])
                         dic = make_response(song_list[id], song.url, song.artist, song.name,
                                             song.album_img, song.artist_img, song.corpus_a, song.corpus_b)
@@ -203,7 +204,7 @@ def get_list_with_phone(request):
                 while(len(list) < 4):
                     id = random.randint(1, len(song_list))
                     song = models.Song.objects.get(id=song_list[id])
-                    if song.is_shelf == 1 and id not in list:
+                    if song.is_shelf == 1 and song_list[id] not in list:
                         list.append(song_list[id])
                         dic = make_response(song_list[id], song.url, song.artist, song.name,
                                             song.album_img, song.artist_img, song.corpus_a, song.corpus_b)
@@ -218,7 +219,7 @@ def get_list_with_phone(request):
                 while(len(list) < 4):
                     id = random.randint(1, len(song_list))
                     song = models.Song.objects.get(id=song_list[id])
-                    if song.is_shelf == 1 and id not in list:
+                    if song.is_shelf == 1 and song_list[id] not in list:
                         list.append(song_list[id])
                         dic = make_response(song_list[id], song.url, song.artist, song.name,
                                             song.album_img, song.artist_img, song.corpus_a, song.corpus_b)
