@@ -1,0 +1,77 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>login</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'adminlte/css/font-awesome.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'adminlte/css/ionicons.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'adminlte/css/adminlte.min.css' %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'plugins/iCheck/square/blue.css' % }">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="#"><b>TimeChick</b>登录</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">登录系统</p>
+
+      <form action="/login/" method="POST">
+      {% csrf_token %}
+    
+      {% if message %}
+      <div class=" alert alert-warning">{{ message }}</div>
+      {% endif %}
+
+    <!-- {% csrf_token %} -->
+    <div class="form-group has-feedback">
+        <input type="text" name="username" class="form-control" placeholder="username" autofocus required>
+
+    </div>
+    <div class="form-group has-feedback">
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="checkbox icheck">
+                <label>
+                    <input type="checkbox"> 记住我
+                </label>
+            </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+        </div>
+        <!-- /.col -->
+    </div>
+    </form>
+
+    </div>
+    <!-- /.login-card-body -->
+    </div>
+    </div>
+    <!-- /.login-box -->
+
+    <!-- jQuery -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- iCheck -->
+    <script src="{% static 'plugins/iCheck/icheck.min.js' %}"></script>
+    </body>
+
+</html>

@@ -10,6 +10,7 @@ ADD timechick /home/timechick
 ADD bindedu /home/bindedu
 ADD manage.py /home/manage.py
 ADD db.sqlite3 /home/
+ADD static /home/static
 
 ADD entrypoint.sh /usr/bin/entrypoint.sh
 

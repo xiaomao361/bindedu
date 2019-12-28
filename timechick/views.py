@@ -5,6 +5,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from timechick import models
 import random
+from django.contrib.auth.decorators import login_required
+from django.contrib import auth, admin
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+import logging
+
+logger = logging.getLogger('django')
 
 
 def make_response(id, url, singer, name, album_img, artist_img, corpus_a, corpus_b):
@@ -139,6 +146,7 @@ def type_music_residue(user_id, type):
             array.append(song.id)
     return array
 
+
 def type_music(type):
     array = []
     type_songs = models.Song.objects.filter(type=type)
@@ -155,7 +163,6 @@ def get_list_with_phone(request):
         music = []
         phone = request.POST['phone'].replace(' ', '')
         if len(phone) == 11:
-            print("dalu")
             try:
                 user = models.User.objects.get(mobile=phone)
                 listened_list = models.PlayList.objects.filter(
@@ -234,7 +241,7 @@ def get_list_with_phone(request):
         },
         return HttpResponse(json.dumps(resp), status='403', content_type="application/json")
 
-    # check the city with phone numno
+    # check the city with phone number
     # url = "https://tcc.taobao.com/"
     # if request.method == "POST":
     #     phone = request.POST['phone'].replace(' ', '')
@@ -242,3 +249,53 @@ def get_list_with_phone(request):
     #     return HttpResponse(r.text, status='200', content_type="application/json")
     # else:
     #     pass
+
+
+# login for admin user
+def log_in(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                logger.info('[Success] ' + username + ' has logged in!')
+                return redirect('/index/')
+            else:
+                message = "用户未激活"
+        else:
+            message = "用户验证未通过"
+        logger.warning('[Failed] ' + username + ' failed to login!')
+        return render(request, 'login.html', {"message": message})
+    else:
+        return render(request, 'login.html')
+
+
+# 登出
+def logout(request):
+    auth.logout(request)
+    return render(request, 'login.html')
+
+
+@login_required
+def playlist(request):
+    playlists = models.PlayList.objects.all()
+    return render(request, 'playlist.html', {'page': 'PlayList', 'playlists': playlists})
+
+
+@login_required
+def index(request):
+    playlists = models.PlayList.objects.all()
+    return render(request, 'playlist.html', {'page': 'PlayList', 'playlists': playlists})
+
+
+@login_required
+def user(request):
+    users = models.User.objects.all()
+    return render(request, 'user.html', {'page': 'User', 'users': users})
+
+@login_required
+def song(request):
+    songs = models.Song.objects.all()
+    return render(request, 'song.html', {'page': 'Song', 'songs': songs})

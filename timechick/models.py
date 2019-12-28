@@ -14,6 +14,8 @@ class User(models.Model):
     email = models.EmailField(default="", verbose_name='邮件', blank=True)
     mobile = models.CharField(
         max_length=128, default="", verbose_name='电话', unique=True, blank=True)
+    baidu_id = models.CharField(
+        max_length=128, default="", verbose_name='百度ID', blank=True)
     sex = models.CharField(max_length=32, choices=gender,
                            default="男", verbose_name='性别', blank=True)
     is_delete = models.BooleanField(

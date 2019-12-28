@@ -23,4 +23,12 @@ urlpatterns = [
     url(r'^get_index_list/', views.get_index_list),
     url(r'^add_playlist/', views.add_playlist),
     url(r'^get_list_with_phone/', views.get_list_with_phone),
+    url(r'^login/', views.log_in),
+    url(r'^login/', views.log_in),
+    url(r'^logout/', views.logout),
+    url(r'^playlist/', views.playlist),
+    url(r'^user/', views.user),
+    url(r'^song/', views.song),
+    url(r'^index/', views.index),
+    url(r'^$', views.index),
 ]
